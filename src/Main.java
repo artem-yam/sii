@@ -1,3 +1,4 @@
+import words.FuzzyComparator;
 import words.Word;
 import words.category.GrammaticalGender;
 import words.category.GrammaticalNumber;
@@ -12,6 +13,7 @@ import java.util.Scanner;
 public class Main {
 
     private Dictionary dictionary;
+    private FuzzyComparator fuzzyComparator = new FuzzyComparator();
     private boolean appOn = false;
 
     public Main() {
@@ -29,6 +31,7 @@ public class Main {
 
 
             do {
+                System.out.println("_________________________");
                 System.out.print("Введите вопрос: ");
 
                 String line = input.nextLine().trim();
@@ -39,30 +42,61 @@ public class Main {
 
                     System.out.println("Найденные слова:");
 
-                    for (int i = 0; i < words.length; i++) {
+                    /*for (int i = 0; i < words.length; i++) {
                         System.out.print(words[i] +
                                 ((i != words.length - 1) ? ", " : ".\n"));
-                    }
-
+                    }*/
 
                     for (String word : words) {
-                        boolean found = false;
-                        for (Word dictionaryWord : dictionary.getWords()) {
-                            if (dictionaryWord.getValue().equals(word)) {
-                                found = true;
 
-                                System.out.printf(
-                                        "Слово \'%s\' обнаружено в словаре: %s\n",
-                                        word, dictionaryWord);
-                                break;
+                        System.out.println("-------------------------");
+
+                        boolean found = false;
+                        Word foundedWord = null;
+                        List<Word> rootWords = new ArrayList<>();
+
+                        for (int i = 0;
+                             i < dictionary.getWords().size() && !found;
+                             i++) {
+
+                            Word tempWord = dictionary.getWords().get(i);
+
+                            found = word.equalsIgnoreCase(tempWord.getValue());
+
+                            if (found) {
+                                foundedWord = tempWord;
+                            } else {
+                                if (word.contains(tempWord.getRoot()) ||
+                                        fuzzyComparator.isFuzzyEqual(word,
+                                                tempWord.getValue())
+                                ) {
+                                    rootWords.add(tempWord);
+                                }
                             }
                         }
+
+                        if (found) {
+                            System.out
+                                    .printf("Слово \'%s\' обнаружено в словаре: %s\n",
+                                            word, foundedWord);
+                        } else {
+                            System.out
+                                    .printf("Слово \'%s\' НЕ обнаружено в словаре\n",
+                                            word);
+
+                            if (!rootWords.isEmpty()) {
+                                System.out.printf("Похожие слова: %s\n",
+                                        rootWords);
+                            }
+
+                        }
+
                     }
-                    System.out.println("-------------------------");
 
                 } else {
                     System.out
-                            .println("Введена пустая строка, повторите ввод.");
+                            .println(
+                                    "Введена пустая строка, повторите ввод.");
                 }
 
             } while (appOn || input.hasNextLine());
@@ -78,36 +112,46 @@ public class Main {
                 //Существительные
                 new Word("игры", "игр", "игра",
                         Arrays.asList("ы"), SpeechPart.NOUN,
-                        GrammaticalGender.FEMININE, GrammaticalNumber.PLURAL)
+                        GrammaticalGender.FEMININE,
+                        GrammaticalNumber.PLURAL)
                 , new Word("компанией", "компани", "компания",
                         Arrays.asList("ей"), SpeechPart.NOUN,
-                        GrammaticalGender.FEMININE, GrammaticalNumber.SINGULAR)
+                        GrammaticalGender.FEMININE,
+                        GrammaticalNumber.SINGULAR)
                 , new Word("жанру", "жанр", "жанр",
                         Arrays.asList("у"), SpeechPart.NOUN,
-                        GrammaticalGender.MASCULINE, GrammaticalNumber.SINGULAR)
+                        GrammaticalGender.MASCULINE,
+                        GrammaticalNumber.SINGULAR)
                 , new Word("стратегия", "стратеги", null,
                         Arrays.asList("я"), SpeechPart.NOUN,
-                        GrammaticalGender.FEMININE, GrammaticalNumber.SINGULAR)
+                        GrammaticalGender.FEMININE,
+                        GrammaticalNumber.SINGULAR)
                 , new Word("версии", "верси", "версия",
                         Arrays.asList("и"), SpeechPart.NOUN,
-                        GrammaticalGender.FEMININE, GrammaticalNumber.SINGULAR)
+                        GrammaticalGender.FEMININE,
+                        GrammaticalNumber.SINGULAR)
                 , new Word("эксклюзивами", "эксклюзив", "эксклюзив",
                         Arrays.asList("ами"), SpeechPart.NOUN,
-                        GrammaticalGender.MASCULINE, GrammaticalNumber.PLURAL)
+                        GrammaticalGender.MASCULINE,
+                        GrammaticalNumber.PLURAL)
                 , new Word("эксклюзивами", "эксклюзив", "эксклюзив",
                         Arrays.asList("ами"), SpeechPart.NOUN,
-                        GrammaticalGender.MASCULINE, GrammaticalNumber.PLURAL)
+                        GrammaticalGender.MASCULINE,
+                        GrammaticalNumber.PLURAL)
                 , new Word("консоль", "консоль", null,
                         new ArrayList<>(), SpeechPart.NOUN,
-                        GrammaticalGender.FEMININE, GrammaticalNumber.SINGULAR)
+                        GrammaticalGender.FEMININE,
+                        GrammaticalNumber.SINGULAR)
                 , new Word("награды", "наград", "награда",
                         Arrays.asList("ы"), SpeechPart.NOUN,
-                        GrammaticalGender.FEMININE, GrammaticalNumber.PLURAL)
+                        GrammaticalGender.FEMININE,
+                        GrammaticalNumber.PLURAL)
 
                 //Прилагательные
                 , new Word("лучшими", "лучш", "лучший",
                         Arrays.asList("ими"), SpeechPart.ADJECTIVE,
-                        GrammaticalGender.MASCULINE, GrammaticalNumber.PLURAL)
+                        GrammaticalGender.MASCULINE,
+                        GrammaticalNumber.PLURAL)
 
                 //Глаголы
                 , new Word("выпущены", "выпущ", "выпускать",

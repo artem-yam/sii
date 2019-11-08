@@ -26,7 +26,7 @@ public class Word {
 
         this.baseForm = (baseForm == null ? value : baseForm);
         this.value = value;
-        this.root = root;
+        this.root = (root == null ? value : root);
         this.affixes = affixes;
         this.grammemes = new HashSet<>(Arrays.asList(grammemes));
     }
