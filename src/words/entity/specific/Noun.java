@@ -1,7 +1,8 @@
-package words;
+package words.entity.specific;
 
 import words.category.Grammeme;
 import words.category.SpeechPart;
+import words.entity.Word;
 
 import java.util.Arrays;
 

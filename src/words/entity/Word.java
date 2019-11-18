@@ -1,6 +1,7 @@
-package words;
+package words.entity;
 
 import words.category.Grammeme;
+import words.category.SpeechPart;
 
 import java.util.*;
 
@@ -12,22 +13,25 @@ public class Word {
     private String root;
     private List<String> affixes = new ArrayList<>();
 
+    private SpeechPart speechPart = SpeechPart.UNDEFINED;
     private Set<Grammeme> grammemes = new HashSet<>();
 
     public Word() {
     }
 
-    public Word(Grammeme grammeme) {
-        grammemes = new HashSet<>(Arrays.asList(grammeme));
+    public Word(SpeechPart speechPart) {
+        this.speechPart = speechPart;
     }
 
     public Word(String value, String root, String baseForm,
-                List<String> affixes, Grammeme... grammemes) {
+                List<String> affixes, SpeechPart speechPart,
+                Grammeme... grammemes) {
 
         this.baseForm = (baseForm == null ? value : baseForm);
         this.value = value;
         this.root = (root == null ? value : root);
         this.affixes = affixes;
+        this.speechPart = speechPart;
         this.grammemes = new HashSet<>(Arrays.asList(grammemes));
     }
 
@@ -65,6 +69,14 @@ public class Word {
 
     public void setAffixes(String... affixes) {
         this.affixes = Arrays.asList(affixes);
+    }
+
+    public SpeechPart getSpeechPart() {
+        return speechPart;
+    }
+
+    public void setSpeechPart(SpeechPart speechPart) {
+        this.speechPart = speechPart;
     }
 
     public Set<Grammeme> getGrammemes() {

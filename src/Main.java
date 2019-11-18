@@ -1,9 +1,9 @@
 import words.FuzzyComparator;
-import words.Word;
 import words.category.GrammaticalGender;
 import words.category.GrammaticalNumber;
 import words.category.GrammaticalTime;
 import words.category.SpeechPart;
+import words.entity.Word;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,60 +38,22 @@ public class Main {
 
                 if (!line.isEmpty()) {
 
-                    String[] words = line.split("[\\s(\\s*[-,.]+\\s*)]+");
+                    List<String> sentenceWords =
+                            Arrays.asList(line.split("[\\s(\\s*[-,.]+\\s*)]+"));
 
                     System.out.println("Найденные слова:");
 
-                    /*for (int i = 0; i < words.length; i++) {
-                        System.out.print(words[i] +
-                                ((i != words.length - 1) ? ", " : ".\n"));
+                    /*for (int i = 0; i < sentenceWords.length; i++) {
+                        System.out.print(sentenceWords[i] +
+                                ((i != sentenceWords.length - 1) ? ", " : ".\n"));
                     }*/
 
-                    for (String word : words) {
+                    List<Word> words = findWords(sentenceWords);
 
-                        System.out.println("-------------------------");
+                    System.out.println("_________________________");
+                    System.out.println("Возможные словосочетания:");
+                    findCollations(words);
 
-                        boolean found = false;
-                        Word foundedWord = null;
-                        List<Word> rootWords = new ArrayList<>();
-
-                        for (int i = 0;
-                             i < dictionary.getWords().size() && !found;
-                             i++) {
-
-                            Word tempWord = dictionary.getWords().get(i);
-
-                            found = word.equalsIgnoreCase(tempWord.getValue());
-
-                            if (found) {
-                                foundedWord = tempWord;
-                            } else {
-                                if (word.contains(tempWord.getRoot()) ||
-                                        fuzzyComparator.isFuzzyEqual(word,
-                                                tempWord.getValue())
-                                ) {
-                                    rootWords.add(tempWord);
-                                }
-                            }
-                        }
-
-                        if (found) {
-                            System.out
-                                    .printf("Слово \'%s\' обнаружено в словаре: %s\n",
-                                            word, foundedWord);
-                        } else {
-                            System.out
-                                    .printf("Слово \'%s\' НЕ обнаружено в словаре\n",
-                                            word);
-
-                            if (!rootWords.isEmpty()) {
-                                System.out.printf("Похожие слова: %s\n",
-                                        rootWords);
-                            }
-
-                        }
-
-                    }
 
                 } else {
                     System.out
@@ -104,6 +66,83 @@ public class Main {
         } finally {
             appOn = false;
         }
+    }
+
+    private List<Collocation> findCollations(List<Word> words) {
+        List<Collocation> collations = new ArrayList<>();
+
+        for (Word word : words) {
+            // new Word[words.size()];
+            List<Collocation> collocations =
+                    Collocation.findCollocations(word,
+                            words.toArray(new Word[0]));
+
+            System.out.println("-------------------------");
+
+            if (collocations.isEmpty()) {
+                System.out.println(
+                        "Словосочетания со словом \'" +
+                                word.getValue() + "\' не найдены");
+            } else {
+                System.out.println("Словосочетания со словом \'" +
+                        word.getValue() + "\': " + collocations);
+            }
+        }
+
+        return collations;
+    }
+
+
+    private List<Word> findWords(List<String> words) {
+        List<Word> resultWords = new ArrayList<>();
+
+        for (String word : words) {
+
+            System.out.println("-------------------------");
+
+            boolean found = false;
+            Word foundedWord = null;
+            List<Word> rootWords = new ArrayList<>();
+
+            for (int i = 0;
+                 i < dictionary.getWords().size() && !found;
+                 i++) {
+
+                Word tempWord = dictionary.getWords().get(i);
+
+                found = word.equalsIgnoreCase(tempWord.getValue());
+
+                if (found) {
+                    foundedWord = tempWord;
+                } else {
+                    if (word.contains(tempWord.getRoot()) ||
+                            fuzzyComparator.isFuzzyEqual(word,
+                                    tempWord.getValue())
+                    ) {
+                        rootWords.add(tempWord);
+                    }
+                }
+            }
+
+            if (found) {
+                resultWords.add(foundedWord);
+
+                System.out
+                        .printf("Слово \'%s\' обнаружено в словаре: %s\n",
+                                word, foundedWord);
+            } else {
+                System.out
+                        .printf("Слово \'%s\' НЕ обнаружено в словаре\n",
+                                word);
+
+                if (!rootWords.isEmpty()) {
+                    System.out.printf("Похожие слова: %s\n",
+                            rootWords);
+                }
+            }
+        }
+
+        return resultWords;
     }
 
     private Dictionary fillDefaultDictionary() {

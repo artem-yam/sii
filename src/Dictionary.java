@@ -1,4 +1,4 @@
-import words.Word;
+import words.entity.Word;
 
 import java.util.ArrayList;
 import java.util.Arrays;

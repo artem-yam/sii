@@ -1,6 +1,7 @@
-package words;
+package words.entity.specific;
 
 import words.category.SpeechPart;
+import words.entity.Word;
 
 public class ProperNoun extends Word {
 
