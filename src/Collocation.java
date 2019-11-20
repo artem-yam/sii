@@ -2,23 +2,10 @@ import words.category.SpeechPart;
 import words.entity.Word;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class Collocation {
-    private static final List NOUN_COLLOCATION_PAIRS =
-            Arrays.asList(SpeechPart.values());
-
-    static {
-        SpeechPart.NOUN.setCollocationPairs(SpeechPart.values());
-        SpeechPart.PROPER_NOUN.setCollocationPairs(SpeechPart.values());
-        SpeechPart.VERB
-                .setCollocationPairs(SpeechPart.NOUN, SpeechPart.PROPER_NOUN);
-        SpeechPart.ADJECTIVE
-                .setCollocationPairs(SpeechPart.NOUN, SpeechPart.PROPER_NOUN);
-    }
-
     private Word word1;
     private Word word2;
 
@@ -28,12 +15,8 @@ public class Collocation {
     }
 
     public static boolean canCollocate(Word word1, Word word2) {
-        boolean result = false;
-
-        result = word1.getSpeechPart().getCollocationPairs()
-                .contains(word2.getSpeechPart());
-
-        return result;
+        return !SpeechPart.UNDEFINED.equals(word1.getSpeechPart()) &&
+                !SpeechPart.UNDEFINED.equals(word2.getSpeechPart());
     }
 
     public static List<Collocation> findCollocations(Word word,
@@ -58,7 +41,7 @@ public class Collocation {
         return word2;
     }
 
-    public Collocation reverseWords() {
+    public Collocation reverse() {
         return new Collocation(word2, word1);
     }
 
@@ -69,7 +52,7 @@ public class Collocation {
         Collocation that = (Collocation) o;
         return (Objects.equals(word1, that.word1) &&
                 Objects.equals(word2, that.word2)) ||
-                reverseWords().equals(that);
+                reverse().equals(that);
     }
 
     @Override
