@@ -15,8 +15,8 @@ public class Collocation {
     }
 
     public static boolean canCollocate(Word word1, Word word2) {
-        return !SpeechPart.UNDEFINED.equals(word1.getSpeechPart()) &&
-                !SpeechPart.UNDEFINED.equals(word2.getSpeechPart());
+        return !(SpeechPart.UNDEFINED.equals(word1.getSpeechPart()) ||
+                SpeechPart.UNDEFINED.equals(word2.getSpeechPart()));
     }
 
     public static List<Collocation> findCollocations(Word word,
