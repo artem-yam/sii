@@ -1,9 +1,11 @@
-package words.entity;
+package videogames.entities;
 
-import words.category.Grammeme;
-import words.category.SpeechPart;
+import videogames.FlexionalClass;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class Word {
 
@@ -13,26 +15,23 @@ public class Word {
     private String root;
     private List<String> affixes = new ArrayList<>();
 
-    private SpeechPart speechPart = SpeechPart.UNDEFINED;
-    private Set<Grammeme> grammemes = new HashSet<>();
+    private FlexionalClass flexionalClass = FlexionalClass.UNDEFINED;
 
     public Word() {
     }
 
-    public Word(SpeechPart speechPart) {
-        this.speechPart = speechPart;
+    public Word(FlexionalClass flexionalClass) {
+        this.flexionalClass = flexionalClass;
     }
 
     public Word(String value, String root, String baseForm,
-                List<String> affixes, SpeechPart speechPart,
-                Grammeme... grammemes) {
+                List<String> affixes, FlexionalClass flexionalClass) {
 
         this.baseForm = (baseForm == null ? value : baseForm);
         this.value = value;
         this.root = (root == null ? value : root);
         this.affixes = affixes;
-        this.speechPart = speechPart;
-        this.grammemes = new HashSet<>(Arrays.asList(grammemes));
+        this.flexionalClass = flexionalClass;
     }
 
     public String getBaseForm() {
@@ -71,46 +70,41 @@ public class Word {
         this.affixes = Arrays.asList(affixes);
     }
 
-    public SpeechPart getSpeechPart() {
-        return speechPart;
+    public FlexionalClass getFlexionalClass() {
+        return flexionalClass;
     }
 
-    public void setSpeechPart(SpeechPart speechPart) {
-        this.speechPart = speechPart;
-    }
-
-    public Set<Grammeme> getGrammemes() {
-        return grammemes;
-    }
-
-    public void setGrammemes(Set<Grammeme> grammemes) {
-        this.grammemes = grammemes;
+    public void setFlexionalClass(FlexionalClass flexionalClass) {
+        this.flexionalClass = flexionalClass;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Word word = (Word) o;
         return Objects.equals(baseForm, word.baseForm) &&
                 Objects.equals(value, word.value) &&
                 Objects.equals(root, word.root) &&
                 Objects.equals(affixes, word.affixes) &&
-                speechPart == word.speechPart &&
-                Objects.equals(grammemes, word.grammemes);
+                flexionalClass == word.flexionalClass;
     }
 
     @Override
     public int hashCode() {
         return Objects
-                .hash(baseForm, value, root, affixes, speechPart, grammemes);
+                .hash(baseForm, value, root, affixes, flexionalClass);
     }
 
     @Override
     public String toString() {
         return "слово = '" + value + '\'' +
-                ", основа ='" + root + '\'' +
-                ", начальная форма ='" + baseForm + '\'' +
+                ", основа = '" + root + '\'' +
+                ", начальная форма = '" + baseForm + '\'' +
                 '}';
     }
 }

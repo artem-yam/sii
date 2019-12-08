@@ -1,4 +1,4 @@
-package words;
+package videogames.utils;
 
 public class FuzzyComparator {
 
