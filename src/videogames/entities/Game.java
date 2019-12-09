@@ -82,6 +82,6 @@ public class Game {
                 ", publishYear='" + publishYear + '\'' +
                 ", awards=" + awards +
                 ", tags=" + tags +
-                '}';
+                "}\n";
     }
 }

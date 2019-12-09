@@ -2,6 +2,7 @@ package videogames.determinators;
 
 import videogames.FlexionalClass;
 import videogames.SearchParameter;
+import videogames.entities.Collocation;
 import videogames.entities.Dictionary;
 import videogames.entities.Game;
 import videogames.entities.Word;
@@ -19,13 +20,23 @@ public class GamesDeterminator {
         this.dictionary = dictionary;
     }
 
-    public List<Game> findGames(List<Word> words) {
+    public List<Game> findGames(List<Collocation> collocations) {
         List<Game> games = new ArrayList<>(dictionary.getGames());
 
-        for (Word word : words) {
+        Iterator<Collocation> colIterator = collocations.iterator();
+
+        while (colIterator.hasNext()) {
+            Collocation collocation = colIterator.next();
+
+            Word colMainWord = collocation.getMainWord();
+            Word colSubWord = collocation.getSubWord();
+
+            boolean containsYear = false;
             try {
-                if (word.getValue().length() == 4) {
-                    int year = Integer.valueOf(word.getValue());
+                if (colSubWord.getValue().length() == 4) {
+                    int year = Integer.valueOf(colSubWord.getValue());
+
+                    containsYear = true;
 
                     games = games.stream()
                             .filter(x -> (x.getPublishYear() == year)).collect(
@@ -33,97 +44,73 @@ public class GamesDeterminator {
                 }
             } catch (NumberFormatException ignored) {
             }
-        }
 
-        for (SearchParameter param : SearchParameter.values()) {
-            findByParam(param, games, words);
-        }
+            if (!containsYear) {
 
+                SearchParameter param = null;
 
-        for (Word word : words) {
-            if (FlexionalClass.IMMUTABLE.equals(word.getFlexionalClass())) {
-                games = games.stream()
-                        .filter(x -> (x.getTags().stream()
-                                .anyMatch(word.getValue()::equalsIgnoreCase)))
-                        .collect(Collectors.toList());
-            }
-        }
+                if (colMainWord.getValue().contains("разраб")) {
+                    param = SearchParameter.DEVELOPER;
+                } else if (colMainWord.getValue().contains("изда")) {
+                    param = SearchParameter.PUBLISHER;
+                } else if (colMainWord.getValue().contains("награ")) {
+                    param = SearchParameter.AWARD;
+                }
 
-        return games;
-    }
+                if (FlexionalClass.IMMUTABLE
+                        .equals(colSubWord.getFlexionalClass())) {
 
+                    if (param != null) {
 
-    private void findByParam(SearchParameter param, List<Game> games,
-                             List<Word> words) {
-        List<Word> tempList = new ArrayList<>();
+                        Iterator<Game> iter = games.iterator();
 
-        switch (param) {
-            case DEVELOPER:
-                tempList =
-                        words.stream()
-                                .filter(x -> (x.getValue().contains("разраб")))
+                        while (iter.hasNext()) {
+                            Game game = iter.next();
+
+                            boolean shouldRemove = false;
+
+                            switch (param) {
+                                case DEVELOPER:
+                                    shouldRemove =
+                                            !colSubWord.getValue()
+                                                    .equalsIgnoreCase(
+                                                            game.getDeveloper());
+                                    break;
+                                case PUBLISHER:
+                                    shouldRemove =
+                                            !colSubWord.getValue()
+                                                    .equalsIgnoreCase(
+                                                            game.getPublisher());
+                                    break;
+                                case AWARD:
+                                    shouldRemove = game.getAwards().stream()
+                                            .noneMatch(colSubWord
+                                                    .getValue()::equalsIgnoreCase);
+
+                                    break;
+                            }
+
+                            if (shouldRemove &&
+                                    game.getTags().stream()
+                                            .noneMatch(colSubWord
+                                                    .getValue()::equalsIgnoreCase)) {
+                                iter.remove();
+                            }
+                        }
+                    } else {
+                        games = games.stream()
+                                .filter(x -> (x.getTags().stream()
+                                        .anyMatch(colSubWord
+                                                .getValue()::equalsIgnoreCase)))
                                 .collect(Collectors.toList());
-                break;
-            case PUBLISHER:
-                tempList =
-                        words.stream()
-                                .filter(x -> (x.getValue().contains("изда")))
-                                .collect(Collectors.toList());
-                break;
-            case AWARD:
-                tempList =
-                        words.stream()
-                                .filter(x -> (x.getValue().contains("награ")))
-                                .collect(Collectors.toList());
-                break;
-        }
-
-        if (tempList.size() == 1) {
-
-            Word tempWord = tempList.get(0);
-            String paramValue = "";
-
-            if (words.indexOf(tempWord) < words.size() - 1 &&
-                    FlexionalClass.IMMUTABLE
-                            .equals(words.get(words.indexOf(tempWord) + 1)
-                                    .getFlexionalClass())) {
-                paramValue = words.get(words.indexOf(tempWord) + 1).getValue();
-                words.remove(words.get(words.indexOf(tempWord) + 1));
-            }
-
-            if (!paramValue.isEmpty()) {
-                Iterator<Game> iter = games.iterator();
-
-                while (iter.hasNext()) {
-                    Game game = iter.next();
-
-                    boolean shouldRemove = false;
-
-                    switch (param) {
-                        case DEVELOPER:
-                            shouldRemove =
-                                    !paramValue.equalsIgnoreCase(
-                                            game.getDeveloper());
-                            break;
-                        case PUBLISHER:
-                            shouldRemove =
-                                    !paramValue.equalsIgnoreCase(
-                                            game.getPublisher());
-                            break;
-                        case AWARD:
-                            shouldRemove = game.getAwards().stream()
-                                    .noneMatch(paramValue::equalsIgnoreCase);
-
-                            break;
-                    }
-
-                    if (shouldRemove) {
-                        iter.remove();
                     }
                 }
             }
 
+            colIterator.remove();
         }
+
+        return games;
     }
 
 }

@@ -35,21 +35,26 @@ public class WordsDeterminator {
 
                 Word tempWord = dictionary.getWords().get(i);
 
-                found = word.equalsIgnoreCase(tempWord.getValue());
-
-                if (found) {
+                if (found = word.equalsIgnoreCase(tempWord.getValue())) {
                     foundedWord = tempWord;
-                } else {
-                    Stream<String> endingsStream = Arrays.stream(
-                            tempWord.getFlexionalClass().getEndings());
-                    if ((word.startsWith(tempWord.getRoot()) &&
-                            endingsStream.anyMatch(word::endsWith)
-                    ) || fuzzyComparator
-                            .isFuzzyEqual(word, tempWord.getValue())
-                    ) {
-                        foundedWord = tempWord;
-                        found = true;
-                    }
+                }
+            }
+
+            for (int i = 0;
+                 i < dictionary.getWords().size() && !found;
+                 i++) {
+
+                Word tempWord = dictionary.getWords().get(i);
+
+                Stream<String> endingsStream = Arrays.stream(
+                        tempWord.getFlexionalClass().getEndings());
+                if ((word.startsWith(tempWord.getRoot()) &&
+                        endingsStream.anyMatch(word::endsWith)
+                ) || fuzzyComparator
+                        .isFuzzyEqual(word, tempWord.getValue())
+                ) {
+                    foundedWord = tempWord;
+                    found = true;
                 }
             }
 

@@ -5,24 +5,24 @@ import videogames.FlexionalClass;
 import java.util.Objects;
 
 public class Collocation {
-    private videogames.entities.Word mainWord;
-    private videogames.entities.Word subWord;
+    private Word mainWord;
+    private Word subWord;
 
     public Collocation(videogames.entities.Word mainWord, videogames.entities.Word subWord) {
         this.mainWord = mainWord;
         this.subWord = subWord;
     }
 
-    public static boolean canCollocate(videogames.entities.Word word1, videogames.entities.Word word2) {
+    public static boolean canCollocate(Word word1, Word word2) {
         return !(FlexionalClass.UNDEFINED.equals(word1.getFlexionalClass()) ||
                 FlexionalClass.UNDEFINED.equals(word2.getFlexionalClass()));
     }
 
-    public videogames.entities.Word getMainWord() {
+    public Word getMainWord() {
         return mainWord;
     }
 
-    public videogames.entities.Word getSubWord() {
+    public Word getSubWord() {
         return subWord;
     }
 

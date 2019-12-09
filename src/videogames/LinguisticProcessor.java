@@ -3,6 +3,7 @@ package videogames;
 import videogames.determinators.CollocationsDeterminator;
 import videogames.determinators.GamesDeterminator;
 import videogames.determinators.WordsDeterminator;
+import videogames.entities.Collocation;
 import videogames.entities.Dictionary;
 import videogames.entities.Word;
 import videogames.utils.FuzzyComparator;
@@ -60,10 +61,13 @@ public class LinguisticProcessor {
                             wordsDeterminator.findWords(sentenceWords);
 
                     System.out.println("\nСловосочетания:");
-                    System.out.println(
-                            collocationsDeterminator.findCollocations(words));
 
-                    System.out.println(gamesDeterminator.findGames(words));
+                    List<Collocation> collocations =
+                            collocationsDeterminator.findCollocations(words);
+
+                    System.out.println(collocations);
+
+                    System.out.println(gamesDeterminator.findGames(collocations));
 
                 } else {
                     System.out
