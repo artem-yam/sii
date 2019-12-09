@@ -39,6 +39,10 @@ public class Dictionary {
                         Arrays.asList("у"), FlexionalClass.NOUN)
                 , new Word("награды", "наград", "награда",
                         Arrays.asList("ы"), FlexionalClass.NOUN)
+                , new Word("разработчик", "разработчик", "разработчик",
+                        null, FlexionalClass.NOUN)
+                , new Word("издатель", "издател", "издатель",
+                        Arrays.asList("ь"), FlexionalClass.NOUN)
 
                 //Глаголы
                 , new Word("выпущены", "выпущ", "выпускать",
@@ -51,6 +55,8 @@ public class Dictionary {
                         Arrays.asList("ят", "ся"), FlexionalClass.VERB)
                 , new Word("получили", "получи", "получить",
                         Arrays.asList("л", "и"), FlexionalClass.VERB)
+                , new Word("награждены", "награжд", "награждать",
+                        Arrays.asList("ен", "ы"), FlexionalClass.VERB)
 
                 // Имена собственные
                 , new Word("NaughtyDog", null, null,
@@ -65,21 +71,47 @@ public class Dictionary {
                         null, FlexionalClass.IMMUTABLE)
                 , new Word("Bethesda", null, null,
                         null, FlexionalClass.IMMUTABLE)
+                , new Word("Sony", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("ElectronicArts", null, null,
+                        null, FlexionalClass.IMMUTABLE)
 
-                , new Word("CriticsAwards", null, null,
+
+                , new Word("GameCriticsAwards", null, null,
                         null, FlexionalClass.IMMUTABLE)
-                , new Word("TheGameAwards", null, null,
-                        null, FlexionalClass.IMMUTABLE)
-                , new Word("GoldenJoystickAwards", null, null,
+                , new Word("VideoGameAwards", null, null,
                         null, FlexionalClass.IMMUTABLE)
                 , new Word("IGN", null, null,
                         null, FlexionalClass.IMMUTABLE)
+                , new Word("GameSpot", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("AIAS", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("GameDevelopersChoiceAwards", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("SpikeVideoGameAwards", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("GoldenJoystickAwards", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("TheGameAwards", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+
 
                 , new Word("RPG", null, null,
                         null, FlexionalClass.IMMUTABLE)
                 , new Word("Action", null, null,
                         null, FlexionalClass.IMMUTABLE)
                 , new Word("Strategy", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("OpenWorld", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("Shooter", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("Stealth", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("Western", null, null,
+                        null, FlexionalClass.IMMUTABLE)
+                , new Word("SciFi", null, null,
                         null, FlexionalClass.IMMUTABLE)
         ));
 
@@ -93,7 +125,35 @@ public class Dictionary {
                 new Game("Skyrim", "Bethesda",
                         "Bethesda", 2011,
                         Arrays.asList("GameSpot", "IGN", "AIAS"),
-                        Arrays.asList("RPG", "Adventure", "OpenWorld"))));
+                        Arrays.asList("RPG", "Adventure", "OpenWorld"))
+                , new Game("Uncharted: Drake’s Fortune", "NaughtyDog",
+                        "Sony", 2007,
+                        Arrays.asList("IGN"),
+                        Arrays.asList("Action", "Adventure", "Shooter"))
+                , new Game("Assassin’s Creed", "Ubisoft",
+                        "Ubisoft", 2007,
+                        Arrays.asList("GameCriticsAwards", "IGN", "GameSpot"),
+                        Arrays.asList("Action", "Adventure", "Stealth",
+                                "OpenWorld"))
+                , new Game("Red Dead Redemption", "Rockstar",
+                        "Rockstar", 2010,
+                        Arrays.asList("VideoGameAwards", "IGN", "GameSpot",
+                                "GameDevelopersChoiceAwards",
+                                "SpikeVideoGameAwards", "AIAS"),
+                        Arrays.asList("Action", "Adventure", "Shooter",
+                                "Western", "OpenWorld"))
+                , new Game("The Legend of Zelda: Breath of the Wild",
+                        "Nintendo", "Nintendo", 2017,
+                        Arrays.asList("GameCriticsAwards", "IGN", "AIAS",
+                                "GoldenJoystickAwards", "TheGameAwards"),
+                        Arrays.asList("Action", "Adventure", "OpenWorld"))
+                , new Game("Mass Effect 2",
+                        "BioWare", "ElectronicArts", 2010,
+                        Arrays.asList("AIAS", "GoldenJoystickAwards",
+                                "SpikeVideoGameAwards", "IGN", "GameSpot"),
+                        Arrays.asList("Action", "RPG", "Shooter", "SciFi"))
+
+        ));
 
         return games;
     }
